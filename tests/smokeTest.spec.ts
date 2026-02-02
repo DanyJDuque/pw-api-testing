@@ -1,15 +1,18 @@
 import { expect } from '../utils/custom-expect';
 import { test } from '../utils/fixtures';
-
+import { createToken } from '../helpers/createToken';
 
 let authToken: string;
 
-test.beforeAll('Run Before all', async ({ api }) => {
-    const tokenResponse = await api
-        .path('/users/login')
-        .body({ "user": { "email": "pwapitesting@yopmail.com", "password": "PwApiTesting" } })
-        .postRequest(200);
-    authToken = tokenResponse.user.token;
+test.beforeAll('Run Before all', async ({ config }) => {
+    // const tokenResponse = await api
+    //     .path('/users/login')
+    //     .body({ "user": { "email": config.userEmail, "password": config.userPassword } })
+    //     .postRequest(200);
+     
+    // authToken = await createToken(api, config.userEmail, config.userPassword)
+   
+    authToken = await createToken(config.userEmail, config.userPassword)
 })
 
 test('Get Articles', async ({ api }) => {
@@ -20,7 +23,15 @@ test('Get Articles', async ({ api }) => {
         .getRequest(200)
 
     expect(response.articles.length).shouldBeLessThanOrEqual(10);
-        expect(response.articlesCount).shouldEqual(10);
+    expect(response.articlesCount).shouldEqual(10);
+
+    // const response2 = await api
+    //     .path('/tags')
+    //     .getRequest(200)
+
+    // expect(response2.tags[0]).shouldEqual('Test');
+    // expect(response2.tags).toContain('Git');
+    // expect(response2.tags.length).shouldBeLessThanOrEqual(10);
 })
 
 test('Get Test Tags', async ({ api }) => {
