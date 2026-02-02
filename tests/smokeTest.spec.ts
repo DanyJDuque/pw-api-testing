@@ -51,7 +51,7 @@ test('Create and Delete Articule', async ({ api }) => {
         .body({ "article": { "title": "Test Two test", "description": "Test description", "body": "Body", "tagList": [] } })
         .postRequest(201)
 
-    expect(createArticleResponse.article.title).shouldEqual('Test Two test');
+    expect(createArticleResponse.article.title).shouldEqual('Test Two testsssss');
     const slugId = createArticleResponse.article.slug;
 
     const articleResponse = await api
