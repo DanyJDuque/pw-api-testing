@@ -1,8 +1,6 @@
 import { expect } from '../utils/custom-expect';
 import { test } from '../utils/fixtures';
 
-
-
 test('Get Articles', async ({ api }) => {
     const response = await api
         .path('/articles')
