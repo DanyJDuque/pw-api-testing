@@ -1,5 +1,6 @@
-import { APIRequestContext } from "@playwright/test"
+import { APIRequestContext, test } from "@playwright/test"
 import { APILogger } from "./logger"
+
 
 export class RequestHandler {
 
@@ -53,74 +54,80 @@ export class RequestHandler {
     }
 
     async getRequest(statusCode: number) {
+        let responseJSON: any
+
         const url = this.getURL()
-        // this.logger.logRequest('GET', url, this.apiHeaders, this.apiBody)
-        this.logger.logRequest('GET', url, this.getHeaders())
+        await test.step(`Get request to: ${url}`, async () => {
+            this.logger.logRequest('GET', url, this.getHeaders())
+            const response = await this.request.get(url, {
+                headers: this.getHeaders()
+            })
+            this.cleanUpFields()
+            const actualStatus = response.status()
+            responseJSON = await response.json()
 
-        const response = await this.request.get(url, {
-
-            headers: this.getHeaders()
-
+            this.logger.logResponse(actualStatus, responseJSON)
+            this.statusCodeValidator(actualStatus, statusCode, this.getRequest)
         })
-        this.cleanUpFields()
-        const actualStatus = response.status()
-        const responseJSON = await response.json()
-
-        this.logger.logResponse(actualStatus, responseJSON)
-        this.statusCodeValidator(actualStatus, statusCode, this.getRequest)
-        // expect(response.status()).toEqual(statusCode)
 
         return responseJSON
     }
 
     async postRequest(statusCode: number) {
+        let responseJSON: any
 
         const url = this.getURL()
-        // this.logger.logRequest('POST', url, this.getHeaders(), this.apiBody)
-        const response = await this.request.post(url, {
-            headers: this.getHeaders(),
-            data: this.apiBody
+        await test.step(`POST request to: ${url}`, async () => {
+            this.logger.logRequest('POST', url, this.getHeaders(), this.apiBody)
+            const response = await this.request.post(url, {
+                headers: this.getHeaders(),
+                data: this.apiBody
+            })
+            this.cleanUpFields()
+            const actualStatus = response.status()
+            responseJSON = await response.json()
+
+            this.logger.logResponse(actualStatus, responseJSON)
+            this.statusCodeValidator(actualStatus, statusCode, this.postRequest)
+            // expect(actualStatus).toEqual(statusCode)
         })
-        this.cleanUpFields()
-        const actualStatus = response.status()
-        const responseJSON = await response.json()
-
-        this.logger.logResponse(actualStatus, responseJSON)
-        this.statusCodeValidator(actualStatus, statusCode, this.postRequest)
-        // expect(actualStatus).toEqual(statusCode)
-
         return responseJSON
     }
 
     async putRequest(statusCode: number) {
+        let responseJSON: any
+
         const url = this.getURL()
-        this.logger.logRequest('PUT', url, this.getHeaders(), this.apiBody)
-        const response = await this.request.put(url, {
-            headers: this.getHeaders(),
-            data: this.apiBody
+        await test.step(`PUT request to: ${url}`, async () => {
+            this.logger.logRequest('PUT', url, this.getHeaders(), this.apiBody)
+            const response = await this.request.put(url, {
+                headers: this.getHeaders(),
+                data: this.apiBody
+            })
+            this.cleanUpFields()
+            const actualStatus = response.status()
+            responseJSON = await response.json()
+
+            this.logger.logResponse(actualStatus, responseJSON)
+            this.statusCodeValidator(actualStatus, statusCode, this.putRequest)
+            // expect(actualStatus).toEqual(statusCode)
         })
-        this.cleanUpFields()
-        const actualStatus = response.status()
-        const responseJSON = await response.json()
-
-        this.logger.logResponse(actualStatus, responseJSON)
-        this.statusCodeValidator(actualStatus, statusCode, this.putRequest)
-        // expect(actualStatus).toEqual(statusCode)
-
         return responseJSON
     }
 
     async deleteRequest(statusCode: number) {
         const url = this.getURL()
-        this.logger.logRequest('DELETE', url, this.getHeaders())
-        const response = await this.request.delete(url, {
-            headers: this.getHeaders(),
+        await test.step(`DELETE request to: ${url}`, async () => {
+            this.logger.logRequest('DELETE', url, this.getHeaders())
+            const response = await this.request.delete(url, {
+                headers: this.getHeaders(),
+            })
+            this.cleanUpFields()
+            const actualStatus = response.status()
+            this.logger.logResponse(actualStatus)
+            this.statusCodeValidator(actualStatus, statusCode, this.deleteRequest)
+            // expect(actualStatus).toEqual(statusCode)
         })
-        this.cleanUpFields()
-        const actualStatus = response.status()
-        this.logger.logResponse(actualStatus)
-        this.statusCodeValidator(actualStatus, statusCode, this.deleteRequest)
-        // expect(actualStatus).toEqual(statusCode)
     }
 
     private getURL() {
