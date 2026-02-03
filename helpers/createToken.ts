@@ -14,7 +14,8 @@ export async function createToken(email: string, password: string) {
             .path('/users/login')
             .body({ "user": { "email": email, "password": password } })
             .postRequest(200);
-        return tokenResponse.user.token;
+
+        return 'Token ' + tokenResponse.user.token;
     } catch (error) {
         Error.captureStackTrace(error as Error, createToken)
         throw error
@@ -22,7 +23,6 @@ export async function createToken(email: string, password: string) {
         await context.dispose()
     }
 }
-
 
 
 
