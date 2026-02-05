@@ -17,7 +17,7 @@ test('Get Test Tags', async ({ api }) => {
         .path('/tags')
         .getRequest(200)
 
-    await validateSchema('tags', 'Get_tags')
+    await validateSchema('tags', 'Get_tags', response)
 
     expect(response.tags[0]).shouldEqual('Test');
     expect(response.tags).toContain('Git');
