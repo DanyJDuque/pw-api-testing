@@ -1,6 +1,7 @@
 import { expect } from '../utils/custom-expect';
 import { test } from '../utils/fixtures';
 import { validateSchema } from '../utils/schema-validator';
+import articleRequestPayload from '../request-objects/POST-article.json'
 
 test('Get Articles', async ({ api }) => {
     const response = await api
@@ -24,13 +25,15 @@ test('Get Test Tags', async ({ api }) => {
 });
 
 test('Create and Delete Articule', async ({ api }) => {
+    const articleRequest = JSON.parse(JSON.stringify(articleRequestPayload))
+    articleRequest.article.title = "This is an object title"
+
     const createArticleResponse = await api
         .path('/articles/')
-        // .headers({ Authorization: authToken })
-        .body({ "article": { "title": "Test Two test", "description": "Test description", "body": "Body", "tagList": [] } })
+        .body(articleRequest)
         .postRequest(201)
     await expect(createArticleResponse).shouldMatchSchema('articles', 'POST_articles')
-    expect(createArticleResponse.article.title).shouldEqual('Test Two test');
+    expect(createArticleResponse.article.title).shouldEqual('This is an object title');
     const slugId = createArticleResponse.article.slug;
 
     const articleResponse = await api
@@ -38,7 +41,7 @@ test('Create and Delete Articule', async ({ api }) => {
         .params({ limit: 10, offset: 0 })
         // .headers({ Authorization: authToken })
         .getRequest(200)
-    expect(articleResponse.articles[0].title).shouldEqual('Test Two test');
+    expect(articleResponse.articles[0].title).shouldEqual('This is an object title');
 
     await api
         .path(`/articles/${slugId}`)
@@ -50,7 +53,7 @@ test('Create and Delete Articule', async ({ api }) => {
         .params({ limit: 10, offset: 0 })
         //  .headers({ Authorization: authToken })
         .getRequest(200)
-    expect(articleResponseTwo.articles[0].title).not.shouldEqual('Test Two test');
+    expect(articleResponseTwo.articles[0].title).not.shouldEqual('This is an object title');
 })
 
 test('Create Update and Delete Articule', async ({ api }) => {
