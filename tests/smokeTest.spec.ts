@@ -16,7 +16,7 @@ test('Get Test Tags', async ({ api }) => {
     const response = await api
         .path('/tags')
         .getRequest(200)
-    // se pasa el parametro true, sí se desea crea el archivo de schema o sí se actualiza
+    // se pasa el parametro true, sí se desea crea el archivo de schema o sí se actualizas
     await expect(response).shouldMatchSchema('tags', 'GET_tags', true)
     expect(response.tags[0]).shouldEqual('Test');
     expect(response.tags).toContain('Git');
