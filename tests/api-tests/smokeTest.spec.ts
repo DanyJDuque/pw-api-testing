@@ -1,8 +1,8 @@
 import { faker } from '@faker-js/faker';
-import articleRequestPayload from '../request-objects/POST-article.json';
-import { expect } from '../utils/custom-expect';
-import { getNewRandomArticle } from '../utils/data-generator';
-import { test } from '../utils/fixtures';
+import articleRequestPayload from '../../request-objects/POST-article.json';
+import { expect } from '../../utils/custom-expect';
+import { getNewRandomArticle } from '../../utils/data-generator';
+import { test } from '../../utils/fixtures';
 
 test('Get Articles', async ({ api }) => {
     const response = await api

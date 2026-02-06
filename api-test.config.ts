@@ -1,6 +1,6 @@
-import dotenv from 'dotenv';
-import path from 'path';
-dotenv.config({ path: path.resolve(__dirname, '.env') });
+// import dotenv from 'dotenv';
+// import path from 'path';
+// dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 const processENV = process.env.TEST_ENV
 const env = processENV || 'prod'
@@ -20,8 +20,8 @@ if (env === 'prod') {
     // if (!process.env.PROD_USERNAME || !process.env.PROD_PASSWORD){
     //     throw Error(`Missing required enviroment variables`)
     // }
-    config.userEmail = process.env.PROD_USERNAME as string
-    config.userPassword = process.env.PROD_PASSWORD as string
+    config.userEmail = process.env.PROD_USERNAME!
+    config.userPassword = process.env.PROD_PASSWORD!
 }
 
 export { config }
