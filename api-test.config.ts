@@ -1,22 +1,27 @@
+import dotenv from 'dotenv';
+import path from 'path';
+dotenv.config({ path: path.resolve(__dirname, '.env') });
+
 const processENV = process.env.TEST_ENV
-const env = processENV || 'dev'
+const env = processENV || 'prod'
 console.log(`Running tests in ${env} environment`)
 
 const config = {
     apiUrl: 'https://conduit-api.bondaracademy.com/api',
     userEmail: 'pwapitesting@yopmail.com',
     userPassword: 'PwApiTesting',
-    // userEmail: 'pwapitesting2@yopmail.com',
-    // userPassword: 'PwApiTesting',
 }
 
-// if (env === 'qa') {
-//     config.userEmail = 'pwapiuser@test.com',
-//         config.userPassword = 'Welcome'
-// }
-// if (env === 'prod') {
-//     config.userEmail = '',
-//         config.userPassword = ''
-// }
+if (env === 'qa') {
+    config.userEmail = 'pwapiuser@test.com'
+    config.userPassword = 'Welcome'
+}
+if (env === 'prod') {
+    // if (!process.env.PROD_USERNAME || !process.env.PROD_PASSWORD){
+    //     throw Error(`Missing required enviroment variables`)
+    // }
+    config.userEmail = process.env.PROD_USERNAME as string
+    config.userPassword = process.env.PROD_PASSWORD as string
+}
 
 export { config }
