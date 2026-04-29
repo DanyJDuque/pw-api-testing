@@ -12,6 +12,18 @@ test('Get Articles', async ({ api }) => {
     await expect(response).shouldMatchSchema('articles', 'GET_articles')
     expect(response.articles.length).shouldBeLessThanOrEqual(10);
     expect(response.articlesCount).shouldEqual(10);
+
+    response.articles.forEach((article: any) => {
+        const titleAsSlug = article.title.replace(/,/g, '').replace(/\s+/g, '-');
+        expect(article.slug).toMatch(new RegExp(`^${titleAsSlug}-\\d+$`));
+    });
+
+
+    // // Verify each article has a valid slug format based on its title
+    // response.articles.forEach((article: any) => {
+    //     const expectedPattern = new RegExp(article.title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '-') + '-\\d+$');
+    //     expect(article.slug).toMatch(expectedPattern);
+    // });
 })
 
 test('Get Test Tags', async ({ api }) => {
@@ -37,17 +49,17 @@ test('Create and Delete Articule', async ({ api }) => {
     const slugId = createArticleResponse.article.slug;
     const articleResponse = await api
         .path('/articles')
-        .params({ limit: 10, offset: 0 })        
+        .params({ limit: 10, offset: 0 })
         .getRequest(200)
     expect(articleResponse.articles[0].title).shouldEqual(articleRequest.article.title);
 
     await api
-        .path(`/articles/${slugId}`)        
+        .path(`/articles/${slugId}`)
         .deleteRequest(204)
 
     const articleResponseTwo = await api
         .path('/articles')
-        .params({ limit: 10, offset: 0 })        
+        .params({ limit: 10, offset: 0 })
         .getRequest(200)
     await expect(articleResponseTwo).shouldMatchSchema('articles', 'GET_articles')
     expect(articleResponseTwo.articles[0].title).not.shouldEqual(articleRequest.article.title);
